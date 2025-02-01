@@ -21,10 +21,11 @@ import com.apptrove.ledgerlyBackend.payload.LoginModel;
 import com.apptrove.ledgerlyBackend.security.util.JwtUtil;
 import com.apptrove.ledgerlyBackend.service.UserService;
 
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@RequestMapping("/ldgr/auth")
+@RequestMapping("/ldgr/T1000")
 @RestController
 public class AuthController {
 	
@@ -42,7 +43,7 @@ public class AuthController {
     @Autowired
     private Environment env;
 	
-    @PostMapping(path = "/login")
+    @PostMapping(path = "/S1001")
     public ResponseEntity<ApiResponse<String>> login(@RequestBody LoginModel loginModel,HttpServletRequest httpServletRequest,HttpServletResponse httpServletResponse) {
     	try {
     		Authentication authentication = authenticationManager.authenticate(
@@ -59,7 +60,7 @@ public class AuthController {
         		String domainName = httpServletRequest.getServerName();
         		String ipAddress = httpServletRequest.getRemoteAddr();
         		String sessionId = httpServletRequest.getSession().getId();
-        		String token = jwtUtil.generateToken(authentication,httpServletResponse);
+        		String token = jwtUtil.generateToken(authentication,httpServletRequest,httpServletResponse);
         		userService.loginUser(loginModel.getUsername(), domainName, sessionId, ipAddress,token);
         		httpServletRequest.getSession().setAttribute("token", token);
             	return new ResponseEntity<ApiResponse<String>>(new ApiResponse<String>(token, env.getProperty("login.success.message"), env.getProperty("login.user.authenticated")),HttpStatus.OK);
@@ -73,13 +74,20 @@ public class AuthController {
 		}
     }
     
-    @PostMapping("/logout")
+    @PostMapping("/S1002")
     public ResponseEntity<ApiResponse<String>> logoutUser(@RequestBody Map<String,Object> reqObj,HttpServletRequest httpServletRequest) {
-        
+    	String sessionId = "";
         try {
-			String token = httpServletRequest.getSession().getAttribute("token") != null ? httpServletRequest.getSession().getAttribute("token").toString() : "";
+			String token = httpServletRequest.getHeader("Authorization").substring(7);
 			if (token != null && token != "" && reqObj.containsKey("username")) {
-				String sessionId = httpServletRequest.getSession().getId();
+				
+				for (Cookie cookie : httpServletRequest.getCookies()) {
+					if (cookie.getName().equals("sessionId")) {
+						sessionId = cookie.getValue();
+					}
+				}
+				
+//				 httpServletRequest.getSession().getId();
 				String domainName = httpServletRequest.getServerName();
 				String ipAddress = httpServletRequest.getRemoteAddr();
 				String username = reqObj.get("username").toString();

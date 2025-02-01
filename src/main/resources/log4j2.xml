@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Configuration>
+    <!-- Global Properties -->
+    <Properties>
+        <!-- Windows Configuration -->
+        <Property name="WINDOWS_LOG_PATH">D:/AppLogs/Ldgrly</Property>
+        <Property name="WINDOWS_LOG_FILE">${WINDOWS_LOG_PATH}/ldgrly.log</Property>
+        
+        <!-- Ubuntu Configuration -->
+        <Property name="UBUNTU_LOG_PATH">/home/credentek/Logs/demoApp</Property>
+        <Property name="UBUNTU_LOG_FILE">${UBUNTU_LOG_PATH}/ldgrly.log</Property>
+        
+        <!-- Common Configuration -->
+        <Property name="MAX_FILE_SIZE">100MB</Property>
+        <Property name="MAX_HISTORY">10</Property>
+    </Properties>
+    
+    <!-- Spring Profile: HOME (Windows) -->
+    <SpringProfile name="HOME">
+        <Appenders>
+            <!-- Console Appender -->
+            <Console name="Console" target="SYSTEM_OUT">
+                <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %c{1}.%M:%L - %msg%n"/>
+            </Console>
+            
+            <!-- File Appender -->
+            <RollingFile name="File" fileName="${WINDOWS_LOG_FILE}" 
+                         filePattern="${WINDOWS_LOG_PATH}/ldgrly-%d{yyyy-MM-dd}.log">
+                <PatternLayout>
+                    <Pattern>%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %c.%M:%L - %msg%n</Pattern>
+                </PatternLayout>
+                <Policies>
+                    <SizeBasedTriggeringPolicy size="${MAX_FILE_SIZE}" />
+                    <TimeBasedTriggeringPolicy />
+                </Policies>
+                <DefaultRolloverStrategy max="${MAX_HISTORY}" />
+            </RollingFile>
+        </Appenders>
+        
+        <!-- Logging Level -->
+        <Loggers>
+            <Root level="info">
+                <AppenderRef ref="Console"/>
+                <AppenderRef ref="File"/>
+            </Root>
+            <Logger name="com.apptrove" level="info"/>
+            <Logger name="org.springframework" level="info"/>
+        </Loggers>
+    </SpringProfile>
+    
+    <!-- Spring Profile: WORK (Ubuntu) -->
+    <SpringProfile name="WORK">
+        <Appenders>
+            <!-- Console Appender -->
+            <Console name="Console" target="SYSTEM_OUT">
+                <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %c{1}.%M:%L - %msg%n"/>
+            </Console>
+            
+            <!-- File Appender -->
+            <RollingFile name="File" fileName="${UBUNTU_LOG_FILE}" 
+                         filePattern="${UBUNTU_LOG_PATH}/ldgrly-%d{yyyy-MM-dd}.log">
+                <PatternLayout>
+                    <Pattern>%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %c.%M:%L - %msg%n</Pattern>
+                </PatternLayout>
+                <Policies>
+                    <SizeBasedTriggeringPolicy size="${MAX_FILE_SIZE}" />
+                    <TimeBasedTriggeringPolicy />
+                </Policies>
+                <DefaultRolloverStrategy max="${MAX_HISTORY}" />
+            </RollingFile>
+        </Appenders>
+        
+        <!-- Logging Level -->
+        <Loggers>
+            <Root level="info">
+                <AppenderRef ref="Console"/>
+                <AppenderRef ref="File"/>
+            </Root>
+            <Logger name="com.apptrove" level="info"/>
+            <Logger name="org.springframework" level="info"/>
+            <Logger name="com.apptrove.ledgerlyBackend.controller" level="debug"/>
+        </Loggers>
+    </SpringProfile>
+</Configuration>

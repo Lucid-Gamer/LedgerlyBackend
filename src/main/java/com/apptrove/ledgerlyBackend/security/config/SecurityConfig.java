@@ -55,7 +55,7 @@ public class SecurityConfig {
 	 public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http.csrf().disable()
 			.authorizeHttpRequests()
-			.requestMatchers("/ldgr/auth/**").permitAll()
+			.requestMatchers("/ldgr/T1000/S1001").permitAll()
 			.anyRequest().authenticated()
 			.and()
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
@@ -72,7 +72,7 @@ public class SecurityConfig {
 		configuration.setAllowedOrigins(List.of(allowedOrigins));
 		configuration.setAllowedHeaders(List.of(allowedHeaders));
 		configuration.setAllowedMethods(List.of(allowedMethods));
-		
+		configuration.setAllowCredentials(true);
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", configuration);
 		

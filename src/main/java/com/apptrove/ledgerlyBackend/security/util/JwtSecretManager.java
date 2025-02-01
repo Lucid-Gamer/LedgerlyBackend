@@ -5,7 +5,7 @@ import java.util.Base64;
 
 import org.springframework.stereotype.Component;
 
-import jakarta.annotation.PostConstruct;
+//import jakarta.annotation.PostConstruct;
 import lombok.Data;
 
 @Component
@@ -14,7 +14,7 @@ public class JwtSecretManager {
 
 	private String jwtSecret;
 	
-	@PostConstruct
+//	@PostConstruct
 	private void generateSecret() {
 		
 		SecureRandom secureRandom = new SecureRandom();
